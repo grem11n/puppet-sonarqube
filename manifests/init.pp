@@ -236,6 +236,7 @@ class sonarqube (
       require => Exec['untar'],
       notify  => Service['sonarqube'],
       mode    => '0600',
+    }
   }
 
   file { '/tmp/cleanup-old-plugin-versions.sh':
