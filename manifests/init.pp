@@ -143,11 +143,10 @@ class sonarqube (
     sonarqube::move_to_home { 'data':
       require => File["$real_home"],
     }
-    }
   }
   if $temp_dir != undef {
     file { $temp_dir:
-      ensure => directory,
+      ensure  => directory,
       require => File['$real_home'],
     }
   }
