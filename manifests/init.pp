@@ -53,6 +53,7 @@ class sonarqube (
   $search_host      = '127.0.0.1',
   $search_port      = '9001',
   $config           = undef,
+  $logback          = undef,
 ) inherits sonarqube::params {
   validate_absolute_path($download_dir)
   Exec {
@@ -221,6 +222,20 @@ class sonarqube (
       notify  => Service['sonarqube'],
       mode    => '0600',
     }
+  }
+  if $logback != undef {
+    file { "${installdir}/conf/logback.xml":
+      source  => $logback,
+      require => Exec['untar'],
+      notify  => Service['sonarqube'],
+      mode    => '0600',
+    }
+  } else {
+    file { "${installdir}/conf/logback.xml":
+      content => template('sonarqube/logback.xml.erb'),
+      require => Exec['untar'],
+      notify  => Service['sonarqube'],
+      mode    => '0600',
   }
 
   file { '/tmp/cleanup-old-plugin-versions.sh':
