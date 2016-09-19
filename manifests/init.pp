@@ -135,9 +135,16 @@ class sonarqube (
     notify => Service['sonarqube'],
   }
   if $data_dir != undef {
-    file { $real_data_dir:
-      ensure  => directory,
+    exec { 'create_data_dir':
+      command => "mkdir -p ${real_data_dir}",
+      creates => $real_data_dir,
       require => File["$real_home"],
+    }
+    ->
+    file { $real_data_dir:
+      ensure => directory,
+      owner  => $user,
+      group  => $group,
     }
   } else {
     sonarqube::move_to_home { 'data':
@@ -145,9 +152,16 @@ class sonarqube (
     }
   }
   if $temp_dir != undef {
-    file { $temp_dir:
-      ensure  => directory,
+    exec { 'create_temp_dir':
+      command => "mkdir -p ${temp_dir}",
+      creates => $temp_dir,
       require => File["$real_home"],
+    }
+    ->
+    file { $temp_dir:
+      ensure => directory,
+      owner  => $user,
+      group  => user,
     }
   }
   sonarqube::move_to_home { 'extras':
