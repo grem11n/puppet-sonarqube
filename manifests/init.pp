@@ -83,7 +83,7 @@ class sonarqube (
   if $log_folder != undef {
     $real_log_folder = $log_folder
   } else {
-    real_log_folder = '/var/local/sonar/logs'
+    $real_log_folder = '/var/local/sonar/logs'
   }
 
   Sonarqube::Move_to_home {
