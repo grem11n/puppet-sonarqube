@@ -19,6 +19,8 @@ class sonarqube (
   $service          = 'sonar',
   $installroot      = '/usr/local',
   $home             = undef,
+  $data_dir         = undef,
+  $temp_dir         = undef,
   $host             = undef,
   $port             = 9000,
   $portAjp          = -1,
@@ -71,6 +73,13 @@ class sonarqube (
   } else {
     $real_home = '/var/local/sonar'
   }
+
+  if $data_dir != undef {
+    $real_data_dir = $data_dir
+  } else {
+    $real_data_dir = "${real_home}/data"
+  }
+
   Sonarqube::Move_to_home {
     home => $real_home,
   }
@@ -126,7 +135,12 @@ class sonarqube (
     notify => Service['sonarqube'],
   }
   ->
-  sonarqube::move_to_home { 'data': }
+  if $data_dir != undef {
+    file { $real_data_dir:
+      ensure => directory,
+  } else {
+    sonarqube::move_to_home { 'data': }
+  }
   ->
   sonarqube::move_to_home { 'extras': }
   ->
@@ -134,6 +148,11 @@ class sonarqube (
   ->
   sonarqube::move_to_home { 'logs': }
   ->
+  if $temp_dir != undef {
+    file { $temp_dir:
+      ensure => directory,
+    }
+  }
   # ===== Install SonarQube =====
   exec { 'untar':
     command => "unzip -o ${tmpzip} -d ${installroot} && chown -R ${user}:${group} ${installroot}/${package_name}-${version} && chown -R ${user}:${group} ${real_home}",
