@@ -212,13 +212,16 @@ sonar.jdbc.timeBetweenEvictionRunsMillis:  <% if @jdbc['time_between_eviction_ru
 # Can be absolute or relative to installation directory.
 # Defaults are respectively <installation home>/data and <installation home>/temp
 
-<% if !@path.empty? -%>
-sonar.path.data: <% if @path['data'] %><%= @path['data'] %><% else %>data<% end %>
-sonar.path.temp: <% if @path['temp'] %><%= @path['data'] %><% else %>temp<% end %>
+<% if !@data_dir.nil? -%>
+sonar.path.data: <%= @data_dir %>
 <% else -%>
-#sonar.path.data=data
-#sonar.path.temp=temp
+#sonar.path.data: data
 <% end -%>
+<% if !@temp_dir.nil? -%>
+sonar.path.temp: <%= @temp_dir %>
+<% else -%>
+#sonar.path.temp: temp
+<% end %>
 
 #---------------------------------------------------------
 # UPDATE CENTER
