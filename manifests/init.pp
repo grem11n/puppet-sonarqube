@@ -137,19 +137,23 @@ class sonarqube (
   if $data_dir != undef {
     file { $real_data_dir:
       ensure  => directory,
-      require => File["$installdir"],
+      require => File["$real_home"],
     }
   } else {
-    sonarqube::move_to_home { 'data': }
+    sonarqube::move_to_home { 'data':
+      require => File["$real_home"],
+    }
+    }
   }
   if $temp_dir != undef {
     file { $temp_dir:
       ensure => directory,
-      require => File['$installdir'],
+      require => File['$real_home'],
     }
   }
-  ->
-  sonarqube::move_to_home { 'extras': }
+  sonarqube::move_to_home { 'extras':
+      require => File['$real_home'],
+  }
   ->
   sonarqube::move_to_home { 'extensions': }
   ->
