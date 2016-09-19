@@ -138,6 +138,7 @@ class sonarqube (
   if $data_dir != undef {
     file { $real_data_dir:
       ensure => directory,
+    }
   } else {
     sonarqube::move_to_home { 'data': }
   }
