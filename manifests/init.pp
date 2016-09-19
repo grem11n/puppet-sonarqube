@@ -44,7 +44,7 @@ class sonarqube (
     min_evictable_idle_time_millis    => '600000',
     time_between_eviction_runs_millis => '30000',
   },
-  $log_folder       = '/var/local/sonar/logs',
+  $log_folder       = undef,
   $updatecenter     = true,
   $http_proxy       = {},
   $profile          = false,
@@ -78,6 +78,12 @@ class sonarqube (
     $real_data_dir = $data_dir
   } else {
     $real_data_dir = "${real_home}/data"
+  }
+
+  if $log_folder != undef {
+    $real_log_folder = $log_folder
+  } else {
+    real_log_folder = '/var/local/sonar/logs'
   }
 
   Sonarqube::Move_to_home {
@@ -138,7 +144,7 @@ class sonarqube (
     exec { 'create_data_dir':
       command => "mkdir -p ${real_data_dir}",
       creates => $real_data_dir,
-      require => File["$real_home"],
+      require => File[$real_home],
     }
     ->
     file { $real_data_dir:
@@ -146,27 +152,38 @@ class sonarqube (
       owner  => $user,
       group  => $group,
     }
-  } else {
-    sonarqube::move_to_home { 'data':
-      require => File["$real_home"],
-    }
   }
   if $temp_dir != undef {
     exec { 'create_temp_dir':
       command => "mkdir -p ${temp_dir}",
       creates => $temp_dir,
-      require => File["$real_home"],
+      require => File[$real_home],
     }
     ->
     file { $temp_dir:
       ensure => directory,
       owner  => $user,
-      group  => user,
+      group  => $group,
     }
   }
-  sonarqube::move_to_home { 'extras':
-      require => File["$real_home"],
+  if $log_folder != undef {
+    exec { 'create_log_folder':
+      command => "mkdir -p ${real_log_folder}",
+      creates => $real_log_folder,
+      require => File[$real_home],
+    }
+    ->
+    file { $real_log_folder:
+      ensure => directory,
+      owner  => $user,
+      group  => $group,
+    }
   }
+  sonarqube::move_to_home { 'data':
+    require => File[$real_home],
+  }
+  ->
+  sonarqube::move_to_home { 'extras': }
   ->
   sonarqube::move_to_home { 'extensions': }
   ->
