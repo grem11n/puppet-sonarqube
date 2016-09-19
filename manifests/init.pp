@@ -134,13 +134,19 @@ class sonarqube (
     target => "${installroot}/${package_name}-${version}",
     notify => Service['sonarqube'],
   }
-  ->
   if $data_dir != undef {
     file { $real_data_dir:
-      ensure => directory,
+      ensure  => directory,
+      require => File["$installdir"],
     }
   } else {
     sonarqube::move_to_home { 'data': }
+  }
+  if $temp_dir != undef {
+    file { $temp_dir:
+      ensure => directory,
+      require => File['$installdir'],
+    }
   }
   ->
   sonarqube::move_to_home { 'extras': }
@@ -149,11 +155,6 @@ class sonarqube (
   ->
   sonarqube::move_to_home { 'logs': }
   ->
-  if $temp_dir != undef {
-    file { $temp_dir:
-      ensure => directory,
-    }
-  }
   # ===== Install SonarQube =====
   exec { 'untar':
     command => "unzip -o ${tmpzip} -d ${installroot} && chown -R ${user}:${group} ${installroot}/${package_name}-${version} && chown -R ${user}:${group} ${real_home}",
