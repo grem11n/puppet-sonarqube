@@ -54,8 +54,8 @@ class sonarqube (
   $search_port      = '9001',
   $config           = undef,
   $path             = {
-    data_dir        = undef,
-    temp_dir        = undef,
+    data_dir        => undef,
+    temp_dir        => undef,
   },
 ) inherits sonarqube::params {
   validate_absolute_path($download_dir)
@@ -144,7 +144,7 @@ class sonarqube (
     target => "${installroot}/${package_name}-${version}",
     notify => Service['sonarqube'],
   }
-  if $data_dir != undef {
+  if $path[data_dir] != undef {
     exec { 'create_data_dir':
       command => "mkdir -p ${real_data_dir}",
       creates => $real_data_dir,
