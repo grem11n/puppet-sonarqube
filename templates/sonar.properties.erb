@@ -213,8 +213,8 @@ sonar.jdbc.timeBetweenEvictionRunsMillis:  <% if @jdbc['time_between_eviction_ru
 # Defaults are respectively <installation home>/data and <installation home>/temp
 
 <% if !@path.empty? -%>
-<% if @path['data_dir'] %><%= "sonar.path.data:" @path['data_dir'] %>
-<% if @path['temp_dir'] %><%= "sonar.path.temp:" @path['temp_dir'] %>
+<% if @path['data_dir'] %><%= "sonar.path.data: #{@path['data_dir']}" %><% end %>
+<% if @path['temp_dir'] %><%= "sonar.path.temp: #{@path['temp_dir']}" %><% end %>
 <% end %>
 
 #---------------------------------------------------------
