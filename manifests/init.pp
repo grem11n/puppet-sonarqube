@@ -53,6 +53,10 @@ class sonarqube (
   $search_host      = '127.0.0.1',
   $search_port      = '9001',
   $config           = undef,
+  $path             = {
+    data_dir        => undef,
+    temp_dir        => undef,
+  },
 ) inherits sonarqube::params {
   validate_absolute_path($download_dir)
   Exec {
@@ -74,8 +78,8 @@ class sonarqube (
     $real_home = '/var/local/sonar'
   }
 
-  if $data_dir != undef {
-    $real_data_dir = $data_dir
+  if $path[data_dir] != undef {
+    $real_data_dir = $path[data_dir]
   } else {
     $real_data_dir = "${real_home}/data"
   }
@@ -140,7 +144,7 @@ class sonarqube (
     target => "${installroot}/${package_name}-${version}",
     notify => Service['sonarqube'],
   }
-  if $data_dir != undef {
+  if $path[data_dir] != undef {
     exec { 'create_data_dir':
       command => "mkdir -p ${real_data_dir}",
       creates => $real_data_dir,
@@ -153,14 +157,14 @@ class sonarqube (
       group  => $group,
     }
   }
-  if $temp_dir != undef {
+  if $path[temp_dir] != undef {
     exec { 'create_temp_dir':
-      command => "mkdir -p ${temp_dir}",
-      creates => $temp_dir,
+      command => "mkdir -p ${path[temp_dir]}",
+      creates => $path[temp_dir],
       require => File[$real_home],
     }
     ->
-    file { $temp_dir:
+    file { $path[temp_dir]:
       ensure => directory,
       owner  => $user,
       group  => $group,
