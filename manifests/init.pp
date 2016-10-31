@@ -23,7 +23,7 @@ class sonarqube (
   $temp_dir         = undef,
   $host             = undef,
   $port             = 9000,
-  $portAjp          = -1,
+  $portajp          = -1,
   $download_url     = 'https://sonarsource.bintray.com/Distribution/sonarqube',
   $download_dir     = '/usr/local/src',
   $context_path     = '/',
@@ -195,7 +195,8 @@ class sonarqube (
   ->
   # ===== Install SonarQube =====
   exec { 'untar':
-    command => "unzip -o ${tmpzip} -d ${installroot} && chown -R ${user}:${group} ${installroot}/${package_name}-${version} && chown -R ${user}:${group} ${real_home}",
+    command => "unzip -o ${tmpzip} -d ${installroot} && chown -R \
+      ${user}:${group} ${installroot}/${package_name}-${version} && chown -R ${user}:${group} ${real_home}",
     creates => "${installroot}/${package_name}-${version}/bin",
     notify  => Service['sonarqube'],
   }
