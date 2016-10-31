@@ -22,7 +22,7 @@ GEM
     aws-sdk-v1 (1.63.0)
       json (~> 1.4)
       nokogiri (>= 1.4.4)
-    beaker (2.4.1)
+    beaker (3.2.0)
       aws-sdk (~> 1.57)
       docker-api
       fission (~> 0.4)
