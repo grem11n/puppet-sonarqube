@@ -13,5 +13,6 @@ gem 'simplecov', :require => false
 gem 'puppet-blacksmith', '>= 3.3.1', :require => false
 gem 'librarian-puppet', '>= 2.0.0', :require => false
 gem 'beaker-rspec', '>= 3.0.0', :require => false
+gem 'safe_yaml', '~> 1.0.4'
 
 # vim:ft=ruby
