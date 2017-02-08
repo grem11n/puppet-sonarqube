@@ -46,6 +46,7 @@ class sonarqube (
   },
   $log_folder       = undef,
   $updatecenter     = true,
+  $updatecenter_url = 'http://update.sonarsource.org/update-center.properties',
   $http_proxy       = {},
   $profile          = false,
   $web_java_opts    = undef,
